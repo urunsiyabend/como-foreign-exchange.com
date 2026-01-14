@@ -12,7 +12,7 @@ This document serves as the master specification for rebuilding the **comoforeig
 - **Styling:** Tailwind CSS v4
 - **UI Components:** shadcn/ui
 - **Type:** Static Website (Static Site Generation - SSG)
-- **Login/Register:** External links to `https://client.comoforeignexchange.com/` (No internal auth).
+- **Login/Register:** External links to `https://client.como-foreign-exchange.com/` (No internal auth).
 - **Contact Form:** Post to `/api/contact`, integrated with Mailgun.
 - **Images:** Placeholder strategy initially, mapping to `/public/uploads/` later.
 
@@ -46,31 +46,10 @@ The system uses **Montserrat** for headers and **Source Sans Pro** for body text
 
 ---
 
-## 4. Information Architecture & Routing
-
-| Path                                     | Page Title           | Description |
-|:-----------------------------------------|:---------------------| :--- |
-| `/`                                      | Home                 | Overview, Market Ticker, Tiers |
-| `/corporate/como-trade`                  | Co-Mo Trade          | 100-year history |
-| `/corporate/vision-mission`              | Vision & Mission     | Company Culture |
-| `/corporate/values`                      | Our Values           | Service & Inspiration |
-| `/corporate/license-and-regulation`      | License & Regulation | ASIC & FINTRAC |
-| `/education/fundamental-analysis`        | Fundamental Analysis | Macroeconomic Indicators |
-| `/education/technical-analysis`          | Technical Analysis   | Chart Reading |
-| `/education/psychology`                  | Psychology           | Behavioral Finance |
-| `/education/advanced-technical-analysis` | Advanced Technical   | Algorithmic Trading |
-| `/partnership`                           | Partnership          | Master IB, IB, Affiliate |
-| `/contact`                               | Contact Us           | Office locations & Form |
-| `/faq`                                   | FAQ                  | Frequently Asked Questions |
-| `/legal-documents`                       | Legal Documents      | Disclaimers & Policies |
-
----
-
 ## 5. Layout & Shared Components
 
 ### Global Layout
-- **Header:** Sticky with Logo, Navigation (Corporate, Education, Partnership, Support), and Register/Login buttons linking to CRM.
-- **Footer:** 4 columns (Corporate, Education, Partners, Support), Legal menu, Social (Twitter), and Copyright.
+- **Header:** Sticky with Logo, Navigation (Corporate, Platforms, Support), and Register/Login buttons linking to CRM.
 
 ### Components
 - `HeroSection`: Page header with breadcrumbs (except home).
@@ -92,12 +71,8 @@ The system uses **Montserrat** for headers and **Source Sans Pro** for body text
   - **Account Tiers:** Discovery of new account types.
   - **Security:** ASIC and MSB regulation details.
 
-### Corporate: CM Globals (`/corporate/cmglobals`)
-- **Copy:** "CM Globals is a subsidiary of Cortez Morgan Family Company which has a long history of 100 years..."
-- **Awards:** Inclusion of "Most Transparent Broker", "Best Customer Service", "Most User-Friendly".
-
 ### Contact Page (`/contact`)
-- **Offices:** Melbourne (Russell St & Little Lonsdale St), Ottawa (Laurier Ave), Sydney (George St).
+- **Office:** Office 116, 191 Abdrahmanova St., Bishkek, Kyrgyzstan
 - **Form:** see Section 7.
 
 ---
@@ -113,7 +88,7 @@ The system uses **Montserrat** for headers and **Source Sans Pro** for body text
 
 ### Integration
 - **Endpoint:** `POST /api/contact`
-- **Mailgun:** Use `mg.messages.create` to send data to `info@cmglobals.com`.
+- **Mailgun:** Use `mg.messages.create` to send data to `info@como-foreign-exchange.com`.
 - **Payload:** `{"name": "...", "email": "...", "phone": "...", "subject": "...", "message": "..."}`
 
 ---

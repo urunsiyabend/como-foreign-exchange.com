@@ -1,0 +1,69 @@
+@font-face {
+  font-family: 'digital';
+  src:  url('fonts/digital.eot?exhcqw');
+  src:  url('fonts/digital.eot?exhcqw#iefix') format('embedded-opentype'),
+    url('fonts/digital.ttf?exhcqw') format('truetype'),
+    url('fonts/digital.woff?exhcqw') format('woff'),
+    url('fonts/digital.svg?exhcqw#digital') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="digital-"], [class*=" digital-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'digital' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.digital-long-arrow-right:before {
+  content: "\e90a";
+}
+.digital-envelope:before {
+  content: "\e90b";
+}
+.digital-building:before {
+  content: "\e90c";
+}
+.digital-phone:before {
+  content: "\e90d";
+}
+.digital-close:before {
+  content: "\e908";
+}
+.digital-menu:before {
+  content: "\e909";
+}
+.digital-attachment:before {
+  content: "\e901";
+}
+.digital-cloud:before {
+  content: "\e902";
+}
+.digital-gallery:before {
+  content: "\e903";
+}
+.digital-pie:before {
+  content: "\e904";
+}
+.digital-stack:before {
+  content: "\e905";
+}
+.digital-store:before {
+  content: "\e906";
+}
+.digital-updload:before {
+  content: "\e907";
+}
+.digital-play:before {
+  content: "\e900";
+}
