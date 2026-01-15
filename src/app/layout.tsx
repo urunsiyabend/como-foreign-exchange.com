@@ -4,6 +4,9 @@ import { locales } from "@/i18n";
 export const metadata: Metadata = {
   title: "Como Foreign Exchange",
   description: "Trade global shares, options, and cryptocurrencies",
+  icons: {
+    icon: "/favicon.webp",
+  },
 };
 
 export function generateStaticParams() {

@@ -1,0 +1,99 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches: [ "master" ]   # ihtiyacına göre değiştir
+
+jobs:
+  security-scan:
+    name: Security scan with Trivy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Trivy file-system & dependency scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'             # filesystem + dependencies
+          scan-ref: '.'               # root of repo
+          exit-code: 1                # 1 = fail pipeline if vulnerability
+          ignore-unfixed: true        # isteğe bağlı: fix bulunmayanlar raporlanır ama build’i kırmayabilir
+          severity: 'CRITICAL,HIGH'   # sadece bu seviyedeki zafiyetler pipeline'ı kırsın
+
+  build-and-deploy:
+    needs: security-scan
+    if: ${{ success() }}
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Build (Next.js standalone)
+        run: npm run build
+
+      # Artefakt paketle: yalnızca gerekli dosyalar
+      - name: Pack artifact
+        run: |
+          RELEASE_NAME="release_$(date +%Y%m%d_%H%M%S)"
+          echo "RELEASE_NAME=$RELEASE_NAME" >> $GITHUB_ENV
+          mkdir -p dist/$RELEASE_NAME
+          # standalone server ve static + public
+          rsync -a .next/standalone/ dist/$RELEASE_NAME/
+          rsync -a .next/static/ dist/$RELEASE_NAME/.next/static/
+          rsync -a --delete public/ dist/$RELEASE_NAME/public/ || true
+          # opsiyonel: README, LICENSE, vs gerekmez
+          tar -C dist -czf $RELEASE_NAME.tgz $RELEASE_NAME
+          ls -lah
+
+      - name: Copy artifact to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          source: "${{ env.RELEASE_NAME }}.tgz"
+          target: "/tmp/"
+
+      - name: Deploy on VPS (atomic symlink switch)
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            set -euo pipefail
+            REL="${{ env.RELEASE_NAME }}"
+            APP_DIR="/opt/comoforeignexchangewebsite"
+            RELEASE_DIR="$APP_DIR/releases/$REL"
+            TAR="/tmp/$REL.tgz"
+
+            test -f "$TAR" || { echo "Missing artifact $TAR"; exit 1; }
+
+            # extract as deploy user (we already own APP_DIR)
+            tar -xzf "$TAR" -C "$APP_DIR/releases/"
+            rm -f "$TAR"
+
+            # link .env into the new release, if you need it at runtime
+            ln -sf "$APP_DIR/shared/.env" "$RELEASE_DIR/.env"
+
+            # atomically point current -> new release
+            ln -sfn "$RELEASE_DIR" "$APP_DIR/current"
+
+            # restart service (sudo is NOPASSWD for this unit)
+            sudo systemctl restart comoforeignexchangewebsite
+
+            # keep only last 5 releases
+            cd "$APP_DIR/releases"
+            ls -1tr | head -n -5 | xargs -r rm -rf

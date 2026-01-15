@@ -1,0 +1,19 @@
+name: Test SSH Connection
+
+on:
+  workflow_dispatch:   # manuel çalıştırma
+
+jobs:
+  ssh-test:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Test SSH Connection
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            echo "✅ SSH connection successful on $(hostname)"
+            uptime
