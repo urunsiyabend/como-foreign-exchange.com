@@ -182,3 +182,11 @@ h2 {
     @apply bg-background text-foreground;
   }
 }
+
+/* Global Container Width Cap */
+.container {
+  max-width: 1200px !important;
+  margin-left: auto;
+  margin-right: auto;
+}
+

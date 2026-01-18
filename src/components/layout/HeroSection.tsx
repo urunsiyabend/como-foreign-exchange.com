@@ -24,7 +24,7 @@ export function HeroSection({
 
   return (
     <section
-      className="relative min-h-[500px] md:min-h-[600px] flex items-center"
+      className="relative min-h-[500px] md:min-h-[700px] flex items-center"
       style={{
         backgroundImage: backgroundImage
           ? `url(${backgroundImage})`
